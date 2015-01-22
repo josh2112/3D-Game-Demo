@@ -1,16 +1,17 @@
 package com.josh2112.FPSDemo.camera;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-public interface Camera {
+public abstract class Camera {
+	
+	protected Quaternion orientation = new Quaternion();
+	protected Matrix4f rotationMatrix = new Matrix4f();
 
-	public Vector3f getLocation();
-	public Matrix4f getRotationMatrix();
+	public abstract Vector3f getRight();
 	
-	public Vector3f getForward();
-	public Vector3f getRight();
-	public Vector3f getUp();
+	public void update( float elapsedSecs ) { }
 	
-	public void update( float elapsedSecs );
+	public abstract void putViewMatrix( Matrix4f viewMatrix );
 }

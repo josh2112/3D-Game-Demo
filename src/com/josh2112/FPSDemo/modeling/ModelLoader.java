@@ -16,9 +16,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.lwjgl.BufferUtils;
 

@@ -1,6 +1,25 @@
 package com.josh2112.FPSDemo;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_LINE;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glFlush;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -14,16 +33,11 @@ import java.util.Map;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
-import com.josh2112.FPSDemo.camera.Camera;
-import com.josh2112.FPSDemo.camera.ChaseCamera;
 import com.josh2112.FPSDemo.entities.Entity;
-import com.josh2112.FPSDemo.math.MathEx;
 import com.josh2112.FPSDemo.modeling.Material;
 import com.josh2112.FPSDemo.modeling.Mesh;
 import com.josh2112.FPSDemo.modeling.ModelLoader;
-import com.josh2112.FPSDemo.players.ControllableSphere;
 import com.josh2112.FPSDemo.shaders.HasFog;
 import com.josh2112.FPSDemo.shaders.HasLightSource;
 import com.josh2112.FPSDemo.shaders.HasModelViewProjectionMatrices;
@@ -43,8 +57,6 @@ public class Renderer {
 	
 	private Scene scene;
 	private Map<Material,List<MeshWithEntity>> meshesByMaterial = new HashMap<>();
-	
-	private Camera camera = new ChaseCamera();
 	
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f viewMatrix = new Matrix4f();
@@ -111,16 +123,11 @@ public class Renderer {
 			}
 		}
 	}
-
-	public Camera getCamera() {
-		return camera;
-	}
 	
 	public void render() {
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		
-		viewMatrix = camera.getRotationMatrix();
-		viewMatrix.translate( (Vector3f)camera.getLocation().negate( null ) );
+		scene.getCamera().putViewMatrix( viewMatrix );
 		
 		if( activeShader instanceof HasModelViewProjectionMatrices ) {
 			((HasModelViewProjectionMatrices)activeShader).loadViewMatrix( viewMatrix );

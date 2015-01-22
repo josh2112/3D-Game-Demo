@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
+import com.josh2112.FPSDemo.camera.Camera;
+import com.josh2112.FPSDemo.camera.ChaseCamera;
+import com.josh2112.FPSDemo.camera.PointableCamera;
 import com.josh2112.FPSDemo.entities.Entity;
 import com.josh2112.FPSDemo.entities.Light;
 import com.josh2112.FPSDemo.entities.Terrain;
@@ -16,7 +19,6 @@ import com.josh2112.FPSDemo.modeling.Material;
 import com.josh2112.FPSDemo.modeling.Model;
 import com.josh2112.FPSDemo.modeling.ModelLoader;
 import com.josh2112.FPSDemo.players.ControllableSphere;
-import com.josh2112.FPSDemo.players.ControllableVehicle;
 import com.josh2112.FPSDemo.shaders.ShaderCache;
 import com.josh2112.FPSDemo.shaders.ShaderProgram;
 
@@ -32,18 +34,21 @@ public class Scene implements OpenGLResource {
 	private float fogDensity = 0.0035f;
 	private float fogGradient = 5f;
 
-	
 	private List<Model> models = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     
     private Entity player;
     private Terrain terrain;
     
-    private Light light;	
+    private Light light;
+    
+    private Camera camera = new ChaseCamera();
 
 	public void update( float elapsedSeconds ) {
 		player.update( elapsedSeconds );
 		for( Entity entity : entities ) entity.update( elapsedSeconds );
+		
+		camera.update( elapsedSeconds );
 		
 		player.collide( terrain );
 	}
@@ -71,6 +76,10 @@ public class Scene implements OpenGLResource {
 
 	public Entity getPlayer() {
 		return player;
+	}
+	
+	public Camera getCamera() {
+		return camera;
 	}
 
     public Vector3f getSkyColor() {
@@ -174,6 +183,12 @@ public class Scene implements OpenGLResource {
 	    
 	    Light light = new Light( new Vector3f( -50, 50, 50 ), new Vector3f( 1, 1, 1 ) );  
 	    scene.setLight( light );
+	    
+	    //PointableCamera camera = new PointableCamera();
+	    //camera.lookAt( new Vector3f( -2, 2, 10 ), player.getLocation() );
+	    ChaseCamera camera = new ChaseCamera();
+	    camera.setSubject( player );
+	    scene.camera = camera;
 		
 		return scene;
 	}

@@ -26,10 +26,8 @@ public class MainGameLoop {
 		
 		Renderer renderer = new Renderer();
 		renderer.setScene( scene );
-		renderer.getCamera().getLocation().translate( -2, 2, 10 );
 		
-		SceneContext.get().setRenderer( renderer );
-		SceneContext.get().setPlayer( scene.getPlayer() );
+		SceneContext.get().setScene( scene );
 		
 		DisplayManager.resetTime();
 		
@@ -41,8 +39,6 @@ public class MainGameLoop {
 			checkForMouseGrab();
 			
 			scene.update( DisplayManager.getElapsedSeconds() );
-			
-			renderer.getCamera().update( DisplayManager.getElapsedSeconds() );
 			
 			renderer.render();
 			

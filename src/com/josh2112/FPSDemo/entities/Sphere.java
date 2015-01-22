@@ -1,6 +1,5 @@
 package com.josh2112.FPSDemo.entities;
 
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -60,16 +59,13 @@ public class Sphere extends Entity {
 		if( velocity.length() < 0.05f ) {
 			velocity.set( 0, 0, 0 );
 		} else {
-			if( !isFalling ) {
-				// Rolling axis is velocity crossed with up
-				Vector3f rollAxis = Vector3f.cross( velocity, MathEx.AxisY, null );
-				
-				rollQuat.setFromAxisAngle( new Vector4f( rollAxis.x, rollAxis.y, rollAxis.z,
-						velocity.length()*elapsedSecs*radius*2.0f ) );
-			}
-			else {
-				rollQuat.scale( 0.9f );
-			}
+			// Rolling axis is velocity crossed with up
+			Vector3f rollAxis = Vector3f.cross( velocity, MathEx.AxisY, null );
+			rollAxis.normalise();
+			
+			rollQuat.setFromAxisAngle( new Vector4f( rollAxis.x, rollAxis.y, rollAxis.z,
+					velocity.length()*elapsedSecs*radius*(float)Math.PI ) );
+			
 			addToOrientation( rollQuat );
 		}
 	}

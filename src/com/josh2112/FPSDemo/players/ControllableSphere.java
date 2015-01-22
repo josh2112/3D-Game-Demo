@@ -21,7 +21,7 @@ public class ControllableSphere extends Sphere implements Controllable {
 	public void checkInputs() {
 		this.force.set( 0, 0, 0 );
 		
-		Vector3f right = SceneContext.get().getRenderer().getCamera().getRight();
+		Vector3f right = SceneContext.get().getScene().getCamera().getRight();
 		Vector3f forward = Vector3f.cross( MathEx.AxisY, right, null );
 		
 		float moveForce = isFalling ? FALLING_MOVE_FORCE : MOVE_FORCE;

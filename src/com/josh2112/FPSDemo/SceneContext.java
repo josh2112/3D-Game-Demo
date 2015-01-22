@@ -1,7 +1,5 @@
 package com.josh2112.FPSDemo;
 
-import com.josh2112.FPSDemo.camera.Camera;
-import com.josh2112.FPSDemo.entities.Entity;
 
 public class SceneContext {
 
@@ -12,19 +10,12 @@ public class SceneContext {
 		return instance;
 	}
 	
-	private Renderer renderer;
-	private Entity player;
+	private Scene scene;
 	
-	public Renderer getRenderer() {
-		return renderer;
+	public Scene getScene() {
+		return scene;
 	}
-	public void setRenderer( Renderer renderer ) {
-		this.renderer = renderer;
-	}
-	public Entity getPlayer() {
-		return player;
-	}
-	public void setPlayer( Entity player ) {
-		this.player = player;
+	public void setScene( Scene scene ) {
+		this.scene = scene;
 	}
 }

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="../ThirdParty/lwjgl-2.9.2/lwjgl-2.9.2/jar/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="../ThirdParty/lwjgl-2.9.2/lwjgl-2.9.2/jar/lwjgl.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="../ThirdParty/lwjgl-2.9.2/lwjgl-2.9.2/native/windows"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="../ThirdParty/slick-util/slick-util.jar"/>
-	<classpathentry kind="lib" path="../ThirdParty/apache/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/slick-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
