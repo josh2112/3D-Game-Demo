@@ -6,16 +6,14 @@ import org.lwjgl.util.vector.Vector3f;
 import com.josh2112.FPSDemo.entities.Light;
 import com.josh2112.FPSDemo.modeling.ModelLoader;
 
-public class SimpleShader extends ShaderProgram implements HasModelViewProjectionMatrices, HasLightSource,
-		HasSpecular, HasFog {
+public class TerrainShader extends ShaderProgram implements HasModelViewProjectionMatrices, HasLightSource, HasFog {
 
 	private int projMatrixId, viewMatrixId, modelMatrixId;
 	private int lightPosId, lightColorId;
-	private int colorId, shineDamperId, reflectivityId;
 	private int fogDensityId, fogGradientId, skyColorId;
 	
-	public SimpleShader() {
-		super( "SimpleShader" );
+	public TerrainShader() {
+		super( "TerrainShader" );
 	}
 	
 	@Override
@@ -33,10 +31,6 @@ public class SimpleShader extends ShaderProgram implements HasModelViewProjectio
 		
 		lightPosId = getUniformLocation( "lightPosition" );
 		lightColorId = getUniformLocation( "lightColor" );
-		
-		colorId = getUniformLocation( "modelColor" );
-		shineDamperId = getUniformLocation( "shineDamper" );
-		reflectivityId = getUniformLocation( "reflectivity" );
 		
 		fogDensityId = getUniformLocation( "fogDensity" );
 		fogGradientId = getUniformLocation( "fogGradient" );
@@ -62,17 +56,6 @@ public class SimpleShader extends ShaderProgram implements HasModelViewProjectio
 	public void loadLight( Light light ) {
 		loadUniform( lightPosId, light.getLocation() );
 		loadUniform( lightColorId, light.getColor() );
-	}
-
-	@Override
-	public void loadSpecularParams( float shineDamper, float reflectivity ) {
-		loadUniform( shineDamperId, shineDamper );
-		loadUniform( reflectivityId, reflectivity );
-	}
-
-	@Override
-	public void loadColor( Vector3f color ) {
-		loadUniform( colorId, color );
 	}
 
 	@Override

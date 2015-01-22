@@ -19,6 +19,7 @@ public class ShaderCache implements OpenGLResource {
 	
 	private ShaderProgram loadShaderProgram( String name ) {
 		if( name.equals( "Simple" ) ) return new SimpleShader();
+		else if( name.equals( "Terrain" ) ) return new TerrainShader();
 		return null;
 	}
 

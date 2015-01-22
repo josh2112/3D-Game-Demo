@@ -139,6 +139,7 @@ public class Scene implements OpenGLResource {
 		scene.setBackgroundColor( new Vector3f( 0.5f, 0.75f, 0.93f ) );
 		
 		ShaderProgram simpleShader = scene.getShader( "Simple" );
+		ShaderProgram terrainShader = scene.getShader( "Terrain" );
 		
 		Texture terrainTexture = scene.textureCache.getTexture( "terrain-grass" );
 		Texture aluminumTexture = scene.textureCache.getTexture( "aluminum2" );
@@ -149,7 +150,7 @@ public class Scene implements OpenGLResource {
 		
 		Material truckBodyMaterial = new Material( simpleShader, aluminumTexture, whiteColor, 10, 1 );
 		Material tireMaterial = new Material( simpleShader, null, new Vector3f( 0.5f, 0.5f, 0.5f ), 1, 0.2f );
-		Material terrainMaterial = new Material( simpleShader, terrainTexture, darkGreenColor, 1, 0 );
+		Material terrainMaterial = new Material( terrainShader, terrainTexture, darkGreenColor, 1, 0 );
 		Material treeMaterial = new Material( simpleShader, treeTexture, darkGreenColor, 1, 0 );
 		
 		// The tree model is big -- scale it down to 3 units high.
@@ -158,7 +159,7 @@ public class Scene implements OpenGLResource {
 		BoundingBox treeBBox = treeModel.getModelBoundingBox();
 		float treeScaleFactor = 3.0f / treeBBox.getMaxY();
 		
-		Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap257", 5, 100, 8 );
+		Terrain.HeightMap heightMap = Terrain.HeightMap.create( "Scrubworld-heightmap", 15, 250, 16 );
 		//Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap10x10", 5, 10, 5 );
 		Terrain terrain = Terrain.generate( scene.modelLoader, terrainMaterial, heightMap );
 		scene.setTerrain( terrain );

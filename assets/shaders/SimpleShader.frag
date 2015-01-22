@@ -22,7 +22,7 @@ void main() {
 	vec3 unitNormal = normalize( normal );
 	vec3 unitToLight = normalize( toLight );
 	
-	float diffuseBrightness = max( dot( unitNormal, unitToLight ), 0.0 );
+	float diffuseBrightness = max( dot( unitNormal, unitToLight ), 0.1 );
 	vec3 diffuse = diffuseBrightness * lightColor;
 	
 	vec3 unitToCamera = normalize( toCamera );
@@ -31,7 +31,13 @@ void main() {
 	float specularBrightness = max( dot( reflectedLightDir, unitToCamera ), 0.0 );
 	vec3 specular = pow( specularBrightness, shineDamper ) * reflectivity * lightColor;
 
-	vec4 color = vec4( modelColor, 1.0 ) * 0.2 + vec4( diffuse, 1.0 ) * texture( texSampler, texCoords ) + vec4( specular, 1.0 );
+	// TODO: Figure out how to use model color instead of texture if texture not set
+	
+	// Texture
+	vec4 color = vec4( diffuse, 1.0 ) * texture( texSampler, texCoords ) + vec4( specular, 1.0 );
+	
+	// No texture
+	//vec4 color = vec4( diffuse, 1.0 ) * vec4( modelColor, 1.0 ) + vec4( specular, 1.0 );
 	
 	out_color = mix( vec4( skyColor, 1 ), color, visibility );
 }
