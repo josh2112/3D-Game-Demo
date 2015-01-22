@@ -8,7 +8,6 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.josh2112.FPSDemo.SceneContext;
 import com.josh2112.FPSDemo.entities.Entity;
 import com.josh2112.FPSDemo.math.MathEx;
 
@@ -26,11 +25,13 @@ public class ChaseCamera extends Camera {
 	private static Logger log = Logger.getLogger( ChaseCamera.class.getName() );
 	
 	private static final float ZOOM_PERCENTAGE = 0.10f;
+	private static final float MIN_PITCH = (float)Math.toRadians( 5 );
+	private static final float MAX_PITCH = (float)Math.toRadians( 85 );
 	
 	private Entity subject;
 	
 	private float followDistance = 10.0f;
-	private float pitchRad, yawRad;
+	private float pitchRad = (float)Math.toRadians( 30 ), yawRad;
 	private boolean limitPitch = true;
 	
 	public void setSubject( Entity e ) {
@@ -38,34 +39,26 @@ public class ChaseCamera extends Camera {
 	}
 	
 	public void update( float elapsedSecs ) {
-		Vector3f lookAt = subject.getLocation();
+		int deltaX = Mouse.getDX();
+		int deltaY = Mouse.getDY();
+		int deltaWheel = (int)Math.signum( Mouse.getDWheel() );
 		
-		int wheelDelta = Mouse.getDWheel();
-		if( wheelDelta < 0 ) {
-			followDistance *= (1.0f + ZOOM_PERCENTAGE);
-		}
-		else if( wheelDelta > 0 ) {
-			followDistance *= (1.0f - ZOOM_PERCENTAGE);
+		followDistance *= (1.0f - deltaWheel * ZOOM_PERCENTAGE );
+		
+		if( Mouse.isButtonDown( 0 ) ) {
+			pitchRad += deltaY * 0.005f;
+			yawRad += -deltaX * 0.005f;	
 		}
 		
-		if( Mouse.isGrabbed() ) {
-			pitchRad -= Mouse.getDY() * 0.005f;
-			yawRad += -Mouse.getDX() * 0.005f;
-			
-			log.info( "" + yawRad );
-			
-			if( limitPitch ) {
-				pitchRad = MathEx.clamp( pitchRad, 0.01f, (float)Math.PI/2.0f - 0.01f );
-			}
-			
-			orientation.setFromAxisAngle( new Vector4f( MathEx.AxisX.x, MathEx.AxisX.y, MathEx.AxisX.z, -pitchRad ) );
-			
-			Quaternion quat = new Quaternion();
-			quat.setFromAxisAngle( new Vector4f( MathEx.AxisY.x, MathEx.AxisY.y, MathEx.AxisY.z, yawRad ) );
-			Quaternion.mul( quat, orientation, orientation );
-			
-			MathEx.setRotationMatrixFromQuaternion( rotationMatrix, orientation );	
-		}
+		if( limitPitch ) pitchRad = MathEx.clamp( pitchRad, MIN_PITCH, MAX_PITCH );
+		
+		orientation.setFromAxisAngle( new Vector4f( MathEx.AxisX.x, MathEx.AxisX.y, MathEx.AxisX.z, -pitchRad ) );
+		
+		Quaternion quat = new Quaternion();
+		quat.setFromAxisAngle( new Vector4f( MathEx.AxisY.x, MathEx.AxisY.y, MathEx.AxisY.z, yawRad ) );
+		Quaternion.mul( quat, orientation, orientation );
+		
+		MathEx.setRotationMatrixFromQuaternion( rotationMatrix, orientation );
 	}
 
 	@Override

@@ -158,8 +158,8 @@ public class Scene implements OpenGLResource {
 		BoundingBox treeBBox = treeModel.getModelBoundingBox();
 		float treeScaleFactor = 3.0f / treeBBox.getMaxY();
 		
-		//Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap257", 5, 100, 8 );
-		Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap10x10", 5, 10, 5 );
+		Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap257", 5, 100, 8 );
+		//Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap10x10", 5, 10, 5 );
 		Terrain terrain = Terrain.generate( scene.modelLoader, terrainMaterial, heightMap );
 		scene.setTerrain( terrain );
 		
@@ -177,7 +177,7 @@ public class Scene implements OpenGLResource {
 		sphereModel.setMaterial( truckBodyMaterial );
 		scene.addModel( sphereModel );
 		ControllableSphere player = new ControllableSphere( sphereModel );
-		player.getLocation().translate( 0, 0.5f, 0 );
+		player.getLocation().translate( 0, 0.5f, 10 );
 	    
 		scene.setPlayer( player );
 	    
@@ -185,7 +185,7 @@ public class Scene implements OpenGLResource {
 	    scene.setLight( light );
 	    
 	    //PointableCamera camera = new PointableCamera();
-	    //camera.lookAt( new Vector3f( -2, 2, 10 ), player.getLocation() );
+	    //camera.lookAt( new Vector3f( -10, 10, 30 ), player.getLocation() );
 	    ChaseCamera camera = new ChaseCamera();
 	    camera.setSubject( player );
 	    scene.camera = camera;

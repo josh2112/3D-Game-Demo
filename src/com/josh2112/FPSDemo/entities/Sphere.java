@@ -61,12 +61,13 @@ public class Sphere extends Entity {
 		} else {
 			// Rolling axis is velocity crossed with up
 			Vector3f rollAxis = Vector3f.cross( velocity, MathEx.AxisY, null );
-			rollAxis.normalise();
-			
-			rollQuat.setFromAxisAngle( new Vector4f( rollAxis.x, rollAxis.y, rollAxis.z,
-					velocity.length()*elapsedSecs*radius*(float)Math.PI ) );
-			
-			addToOrientation( rollQuat );
+			if( rollAxis.length() > 0 ) {
+				rollAxis.normalise();
+				rollQuat.setFromAxisAngle( new Vector4f( rollAxis.x, rollAxis.y, rollAxis.z,
+						velocity.length()*elapsedSecs*radius*(float)Math.PI ) );
+				
+				addToOrientation( rollQuat );
+			}
 		}
 	}
 

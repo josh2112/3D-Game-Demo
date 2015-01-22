@@ -36,8 +36,6 @@ public class MainGameLoop {
 		while( !Display.isCloseRequested() ) {
 			if( Display.wasResized() ) renderer.resetProjection();
 			
-			checkForMouseGrab();
-			
 			scene.update( DisplayManager.getElapsedSeconds() );
 			
 			renderer.render();
@@ -51,22 +49,5 @@ public class MainGameLoop {
 		DisplayManager.close();
 		
 		log.info( "Done." );
-	}
-
-	private static void checkForMouseGrab() {
-		if( Mouse.isGrabbed() ) {
-			while( Keyboard.next() ) {
-				if( Keyboard.getEventKeyState() && Keyboard.getEventKey() == Keyboard.KEY_ESCAPE ) {
-					Mouse.setGrabbed( false );
-				}
-			}
-		}
-		else while( Mouse.next() ) {
-			if( Mouse.getEventButton() > -1 ) {
-				if( Mouse.getEventButtonState() && Mouse.getEventButton() == 0 ) {
-					Mouse.setGrabbed( true );
-				}
-			}
-		}
 	}
 }
