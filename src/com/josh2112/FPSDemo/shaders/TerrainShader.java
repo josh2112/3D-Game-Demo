@@ -6,11 +6,13 @@ import org.lwjgl.util.vector.Vector3f;
 import com.josh2112.FPSDemo.entities.Light;
 import com.josh2112.FPSDemo.modeling.ModelLoader;
 
-public class TerrainShader extends ShaderProgram implements HasModelViewProjectionMatrices, HasLightSource, HasFog {
+public class TerrainShader extends ShaderProgram implements HasModelViewProjectionMatrices,
+		HasLightSource, HasFog, HasTextureBlend {
 
 	private int projMatrixId, viewMatrixId, modelMatrixId;
 	private int lightPosId, lightColorId;
 	private int fogDensityId, fogGradientId, skyColorId;
+	private int blendTexId, baseTexId, rTexId, gTexId, bTexId;
 	
 	public TerrainShader() {
 		super( "TerrainShader" );
@@ -35,6 +37,12 @@ public class TerrainShader extends ShaderProgram implements HasModelViewProjecti
 		fogDensityId = getUniformLocation( "fogDensity" );
 		fogGradientId = getUniformLocation( "fogGradient" );
 		skyColorId = getUniformLocation( "skyColor" );
+		
+		blendTexId = getUniformLocation( "blendTexture" );
+		baseTexId = getUniformLocation( "baseTexture" );
+		rTexId = getUniformLocation( "rTexture" );
+		gTexId = getUniformLocation( "gTexture" );
+		bTexId = getUniformLocation( "bTexture" );
 	}
 	
 	@Override
@@ -67,5 +75,15 @@ public class TerrainShader extends ShaderProgram implements HasModelViewProjecti
 	@Override
 	public void loadSkyColor( Vector3f skyColor ) {
 		loadUniform( skyColorId, skyColor );
+	}
+
+	@Override
+	public void connectTextureUnits() {
+		loadUniform( blendTexId, 0 );
+		loadUniform( baseTexId, 1 );
+		loadUniform( rTexId, 2 );
+		loadUniform( gTexId, 3 );
+		loadUniform( bTexId, 4 );
+		
 	}
 }

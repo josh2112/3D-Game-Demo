@@ -18,6 +18,7 @@ import com.josh2112.FPSDemo.modeling.BoundingBox;
 import com.josh2112.FPSDemo.modeling.Material;
 import com.josh2112.FPSDemo.modeling.Model;
 import com.josh2112.FPSDemo.modeling.ModelLoader;
+import com.josh2112.FPSDemo.modeling.TerrainMaterial;
 import com.josh2112.FPSDemo.players.ControllableSphere;
 import com.josh2112.FPSDemo.shaders.ShaderCache;
 import com.josh2112.FPSDemo.shaders.ShaderProgram;
@@ -141,7 +142,13 @@ public class Scene implements OpenGLResource {
 		ShaderProgram simpleShader = scene.getShader( "Simple" );
 		ShaderProgram terrainShader = scene.getShader( "Terrain" );
 		
-		Texture terrainTexture = scene.textureCache.getTexture( "terrain-grass" );
+		TextureBlend terrainTextureBlend = new TextureBlend(
+				scene.textureCache.getTexture( "terrain-grass" ),
+				scene.textureCache.getTexture( "Scrubworld-blendmap" ),
+				scene.textureCache.getTexture( "terrain-dirt" ),
+				scene.textureCache.getTexture( "terrain-grass2" ),
+				scene.textureCache.getTexture( "terrain-pavement" ) );
+		
 		Texture aluminumTexture = scene.textureCache.getTexture( "aluminum2" );
 		Texture treeTexture = scene.textureCache.getTexture( "lowPolyTree" );
 		
@@ -150,7 +157,6 @@ public class Scene implements OpenGLResource {
 		
 		Material truckBodyMaterial = new Material( simpleShader, aluminumTexture, whiteColor, 10, 1 );
 		Material tireMaterial = new Material( simpleShader, null, new Vector3f( 0.5f, 0.5f, 0.5f ), 1, 0.2f );
-		Material terrainMaterial = new Material( terrainShader, terrainTexture, darkGreenColor, 1, 0 );
 		Material treeMaterial = new Material( simpleShader, treeTexture, darkGreenColor, 1, 0 );
 		
 		// The tree model is big -- scale it down to 3 units high.
@@ -159,8 +165,9 @@ public class Scene implements OpenGLResource {
 		BoundingBox treeBBox = treeModel.getModelBoundingBox();
 		float treeScaleFactor = 3.0f / treeBBox.getMaxY();
 		
-		Terrain.HeightMap heightMap = Terrain.HeightMap.create( "Scrubworld-heightmap", 15, 250, 16 );
-		//Terrain.HeightMap heightMap = Terrain.HeightMap.create( "heightMap10x10", 5, 10, 5 );
+		TerrainMaterial terrainMaterial = new TerrainMaterial( terrainShader, terrainTextureBlend, darkGreenColor );
+		HeightMap heightMap = HeightMap.create( "Scrubworld-heightmap", 15, 250, 16 );
+		//HeightMap heightMap = HeightMap.create( "heightMap10x10", 5, 10, 5 );
 		Terrain terrain = Terrain.generate( scene.modelLoader, terrainMaterial, heightMap );
 		scene.setTerrain( terrain );
 		

@@ -21,6 +21,10 @@ import static org.lwjgl.opengl.GL11.glFlush;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -38,6 +42,7 @@ import com.josh2112.FPSDemo.entities.Entity;
 import com.josh2112.FPSDemo.modeling.Material;
 import com.josh2112.FPSDemo.modeling.Mesh;
 import com.josh2112.FPSDemo.modeling.ModelLoader;
+import com.josh2112.FPSDemo.modeling.TerrainMaterial;
 import com.josh2112.FPSDemo.shaders.HasFog;
 import com.josh2112.FPSDemo.shaders.HasLightSource;
 import com.josh2112.FPSDemo.shaders.HasModelViewProjectionMatrices;
@@ -180,6 +185,19 @@ public class Renderer {
 		if( material.getTexture() != null ) {
 			glActiveTexture( GL_TEXTURE0 );
 			glBindTexture( GL_TEXTURE_2D, material.getTexture().getTextureID() );
+		}
+		else if( material instanceof TerrainMaterial ) {
+			TextureBlend terrainMaterial = ((TerrainMaterial)material).getTextureBlend();
+			glActiveTexture( GL_TEXTURE0 );
+			glBindTexture( GL_TEXTURE_2D, terrainMaterial.getBlendTexture().getTextureID() );
+			glActiveTexture( GL_TEXTURE1 );
+			glBindTexture( GL_TEXTURE_2D, terrainMaterial.getBaseTexture().getTextureID() );
+			glActiveTexture( GL_TEXTURE2 );
+			glBindTexture( GL_TEXTURE_2D, terrainMaterial.getRedTexture().getTextureID() );
+			glActiveTexture( GL_TEXTURE3 );
+			glBindTexture( GL_TEXTURE_2D, terrainMaterial.getGreenTexture().getTextureID() );
+			glActiveTexture( GL_TEXTURE4 );
+			glBindTexture( GL_TEXTURE_2D, terrainMaterial.getBlueTexture().getTextureID() );
 		} else {
 			glBindTexture( GL_TEXTURE_2D, 0 );
 		}
