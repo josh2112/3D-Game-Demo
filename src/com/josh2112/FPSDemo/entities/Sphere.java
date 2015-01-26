@@ -3,16 +3,18 @@ package com.josh2112.FPSDemo.entities;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+import org.newdawn.slick.util.Log;
 
 import com.josh2112.FPSDemo.math.MathEx;
 import com.josh2112.FPSDemo.modeling.Model;
+import com.sun.javafx.css.CalculatedValue;
 
 public class Sphere extends Entity {
 
 	private static float MASS = 1;
-	private static float FRICTION = 2.5f;
+	private static float FRICTION = 1f;
 	
-	private static Vector3f GRAVITY = new Vector3f( 0, -9.8f, 0 );
+	private static Vector3f F_GRAVITY = new Vector3f( 0, -9.8f * MASS, 0 );
 	
 	private float radius;
 	
@@ -33,16 +35,10 @@ public class Sphere extends Entity {
 	
 	@Override
 	public void update( float elapsedSecs ) {
+		this.force.set( 0, 0, 0 );
+		addForces();
 		
-		if( !isFalling ) {
-			// Add rolling friction proportional to velocity
-			// force += -velocity * friction
-			Vector3f.add( this.force, MathEx.scale( this.velocity.negate( null ), FRICTION, null ), this.force );	
-		}
-		
-		// acceleration = force / mass
 		Vector3f accel = (Vector3f)force.scale( 1.0f/MASS );
-		if( isFalling ) Vector3f.add( accel, GRAVITY, accel );
 		
 		// TODO: Tackle advanced Verlet integration which allows forces to change based on position:
 		// http://gamedev.stackexchange.com/questions/15708/how-can-i-implement-gravity
@@ -69,6 +65,39 @@ public class Sphere extends Entity {
 				addToOrientation( rollQuat );
 			}
 		}
+	}
+	
+	protected void addForces() {
+		if( !isFalling ) {
+			// Add rolling friction proportional to velocity
+			// force += -velocity * friction
+			Vector3f.add( this.force, MathEx.scale( this.velocity.negate( null ), FRICTION, null ), this.force );
+			
+			// Add sliding force due to gravity on a sloped surface
+			Vector3f.add( this.force, calculateSlidingForce(), this.force ); 
+		}
+		else {
+			// Add gravity
+			Vector3f.add( this.force, F_GRAVITY, this.force );
+		} 
+	}
+
+	/**
+	 * Calculates the sliding force (the force due to gravity pulling us down a slope).
+	 * This is done by calculating the component of gravity along the anti-normal (the
+	 * surface normal negated), then subtracting that from the full force of gravity to
+	 * obtain the component of gravity along the slope.
+	 * @return
+	 */
+	private Vector3f calculateSlidingForce() {
+		Vector3f antiNormal = terrainNormal.negate( null );
+		
+		float theta = Vector3f.angle( antiNormal, F_GRAVITY );
+		float fn = (float)( Math.cos( theta ) * F_GRAVITY.length() );
+		antiNormal.scale( fn );
+		
+		Vector3f fs = Vector3f.sub( F_GRAVITY, antiNormal, null );
+		return fs;
 	}
 
 	@Override

@@ -41,10 +41,14 @@ public class ControllableSphere extends Sphere implements Controllable {
 		}
 	}
 	
+	/**
+	 * Adds force due to player movement, then defer to superclass
+	 * for other forces (gravity, friction, etc.)
+	 */
 	@Override
-	public void update( float elapsedSecs ) {
+	public void addForces() {
 		checkInputs();
-		super.update( elapsedSecs );
+		super.addForces();
 	}
 
 }
