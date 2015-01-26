@@ -15,7 +15,7 @@ public class MainGameLoop {
 	private static final String appName = "LWJGL Demo";
 
 	public static void main( String[] args ) throws IOException {
-		LogManager.getLogManager().readConfiguration( new FileInputStream( "assets/logging.properties" ) );
+		LogManager.getLogManager().readConfiguration( new FileInputStream( "resources/logging.properties" ) );
 		
 		Logger log = Logger.getLogger( MainGameLoop.class.getName() );
 		

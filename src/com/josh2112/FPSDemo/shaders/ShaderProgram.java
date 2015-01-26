@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.josh2112.FPSDemo.OpenGLResource;
+import com.josh2112.FPSDemo.Resources;
 
 public abstract class ShaderProgram implements OpenGLResource {
 
@@ -22,9 +23,8 @@ public abstract class ShaderProgram implements OpenGLResource {
 	private static FloatBuffer matrix4fBuf = BufferUtils.createFloatBuffer( 16 );
 	
 	public ShaderProgram( String shaderFilename ) {
-		String vtxShaderPath = "assets/shaders/" + shaderFilename + ".vtx";
-		String fragShaderPath = "assets/shaders/" + shaderFilename + ".frag";
-		init( vtxShaderPath, fragShaderPath );
+		init( Resources.pathForResource( Resources.Type.VertexShader, shaderFilename ),
+				Resources.pathForResource( Resources.Type.FragmentShader, shaderFilename ) );
 	}
 	
 	public ShaderProgram( String vtxShaderPath, String fragShaderPath ) {

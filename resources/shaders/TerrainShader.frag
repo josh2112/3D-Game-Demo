@@ -5,17 +5,18 @@ in vec3 normal;
 in vec3 toLight;
 in vec3 toCamera;
 in float visibility;
+in vec2 blendMapCoords;
 
 out vec4 out_color;
 
-uniform sampler2D baseTexture, blendTexture, rTexture, gTexture, bTexture;
+uniform sampler2D blendTexture, baseTexture, rTexture, gTexture, bTexture;
 
 uniform vec3 lightColor;
 uniform vec3 skyColor;
 
 void main() {
 	
-	vec4 blend = texture( blendTexture, texCoords );
+	vec4 blend = texture( blendTexture, blendMapCoords );
 	float baseTexAmt = 1 - blend.r - blend.g - blend.b;
 	
 	vec4 baseTexColor = texture( baseTexture, texCoords ) * baseTexAmt;

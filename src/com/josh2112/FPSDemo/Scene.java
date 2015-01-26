@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
+import com.josh2112.FPSDemo.HUD.HeadsUpDisplay;
 import com.josh2112.FPSDemo.camera.Camera;
 import com.josh2112.FPSDemo.camera.ChaseCamera;
 import com.josh2112.FPSDemo.camera.PointableCamera;
@@ -38,8 +39,10 @@ public class Scene implements OpenGLResource {
 	private List<Model> models = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     
-    private Entity player;
     private Terrain terrain;
+    
+    private Entity player;
+    private HeadsUpDisplay hud;
     
     private Light light;
     
@@ -50,6 +53,7 @@ public class Scene implements OpenGLResource {
 		for( Entity entity : entities ) entity.update( elapsedSeconds );
 		
 		camera.update( elapsedSeconds );
+		hud.update( elapsedSeconds );
 		
 		player.collide( terrain );
 	}
@@ -67,11 +71,19 @@ public class Scene implements OpenGLResource {
 		this.player = player;
 	}
 
+	public HeadsUpDisplay getHeadsUpDisplay() {
+		return hud;
+	}
+
+	public void setHeadsUpDisplay( HeadsUpDisplay hud ) {
+		this.hud = hud;
+	}
+
 	private void setTerrain( Terrain terrain ) {
 		this.terrain = terrain;
 	}
 
-	public Entity getTerrain() {
+	public Terrain getTerrain() {
 		return terrain;
 	}
 
@@ -173,7 +185,7 @@ public class Scene implements OpenGLResource {
 		
 		List<Entity> trees = terrain.populateWithPlant( treeModel, 50 );
 		trees.forEach( t -> t.setScale( treeScaleFactor ) );
-		//scene.getModeledEntities().addAll( trees );
+		scene.getEntities().addAll( trees );
 		
 		//Model truckModel = scene.modelLoader.loadFromObjFile( "truck" );
 		//truckModel.getMeshes().stream().filter( m -> m.getName().startsWith( "Cube" ) ).forEach( m -> m.setMaterial( truckBodyMaterial ) );
@@ -188,8 +200,10 @@ public class Scene implements OpenGLResource {
 		player.getLocation().translate( 0, 0.5f, 10 );
 	    
 		scene.setPlayer( player );
+		
+		scene.setHeadsUpDisplay( new HeadsUpDisplay() );
 	    
-	    Light light = new Light( new Vector3f( -50, 50, 50 ), new Vector3f( 1, 1, 1 ) );  
+	    Light light = new Light( new Vector3f( -50, 1000, 50 ), new Vector3f( 1, 1, 1 ) );  
 	    scene.setLight( light );
 	    
 	    //PointableCamera camera = new PointableCamera();

@@ -26,6 +26,6 @@ void main() {
 	toLight = lightPosition - positionInWorld.xyz;
 	toCamera = (inverse( viewMatrix ) * vec4( 0, 0, 0, 1 )).xyz - positionInWorld.xyz;
 	
-	float distance = length( positionInCamera.xyz );
-	visibility = clamp( exp( -pow( distance * fogDensity, fogGradient ) ), 0, 1 );
+	float dist = length( positionInCamera.xyz );
+	visibility = clamp( exp( -pow( dist * fogDensity, fogGradient ) ), 0, 1 );
 }

@@ -5,6 +5,7 @@ in vec2 in_texCoords;
 in vec3 in_normal;
 
 out vec2 texCoords;
+out vec2 blendMapCoords;
 out vec3 normal;
 out vec3 toLight;
 out vec3 toCamera;
@@ -13,6 +14,7 @@ out float visibility;
 uniform mat4 projMatrix, viewMatrix, modelMatrix;
 uniform vec3 lightPosition;
 uniform float fogDensity, fogGradient;
+uniform float terrainDimension;
 
 void main() {
 	
@@ -26,6 +28,9 @@ void main() {
 	toLight = lightPosition - positionInWorld.xyz;
 	toCamera = (inverse( viewMatrix ) * vec4( 0, 0, 0, 1 )).xyz - positionInWorld.xyz;
 	
-	float distance = length( positionInCamera.xyz );
-	visibility = clamp( exp( -pow( distance * fogDensity, fogGradient ) ), 0, 1 );
+	float dist = length( positionInCamera.xyz );
+	visibility = clamp( exp( -pow( dist * fogDensity, fogGradient ) ), 0, 1 );
+	
+	blendMapCoords = vec2( (in_position.x + terrainDimension / 2.0f) / terrainDimension,
+							(in_position.z + terrainDimension / 2.0f) / terrainDimension );
 }

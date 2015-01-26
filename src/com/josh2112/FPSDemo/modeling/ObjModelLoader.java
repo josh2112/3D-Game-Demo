@@ -13,9 +13,9 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
+import com.josh2112.FPSDemo.Resources;
+
 public class ObjModelLoader {
-	
-	private static final String PATH = "assets/models/";
 	
 	public static class FaceDef {
 		public int iv, it, in;
@@ -102,7 +102,7 @@ public class ObjModelLoader {
 	private List<Vector3f> normals = new ArrayList<>();
 	
 	public ObjModelLoader( String modelName ) {
-		String path = PATH + modelName + ".obj";
+		String path = Resources.pathForResource( Resources.Type.Model, modelName );
 		
 		ObjMesh currentMesh = null;
 		
@@ -125,7 +125,7 @@ public class ObjModelLoader {
 	private ObjMesh parseObjLine( ObjMesh currentMesh, String line ) {
 		String[] tokens = line.split( "\\s+" );
 		
-		if( tokens[0].equals( "mtllib" ) ) loadMaterial( tokens[1] );
+		if( tokens[0].equals( "mtllib" ) ) loadMaterial( tokens[1].split( "\\." )[0] );
 		else if( tokens[0].equals( "o" ) ) currentMesh = startObject( currentMesh, tokens[1] );
 		else if( tokens[0].equals( "usemtl" ) ) setMaterial( currentMesh, tokens[1] );
 		else if( tokens[0].equals( "v" ) ) vertices.add( parseVector( tokens[1], tokens[2], tokens[3] ) );
@@ -158,7 +158,7 @@ public class ObjModelLoader {
 	}
 
 	private void loadMaterial( String matName ) {
-		String path = PATH + matName;
+		String path = Resources.pathForResource( Resources.Type.Material, matName );
 		
 		Material material = new Material();
 		

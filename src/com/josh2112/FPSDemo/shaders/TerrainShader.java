@@ -13,6 +13,7 @@ public class TerrainShader extends ShaderProgram implements HasModelViewProjecti
 	private int lightPosId, lightColorId;
 	private int fogDensityId, fogGradientId, skyColorId;
 	private int blendTexId, baseTexId, rTexId, gTexId, bTexId;
+	private int terrainDimId;
 	
 	public TerrainShader() {
 		super( "TerrainShader" );
@@ -38,6 +39,7 @@ public class TerrainShader extends ShaderProgram implements HasModelViewProjecti
 		fogGradientId = getUniformLocation( "fogGradient" );
 		skyColorId = getUniformLocation( "skyColor" );
 		
+		terrainDimId = getUniformLocation( "terrainDimension" );
 		blendTexId = getUniformLocation( "blendTexture" );
 		baseTexId = getUniformLocation( "baseTexture" );
 		rTexId = getUniformLocation( "rTexture" );
@@ -85,5 +87,10 @@ public class TerrainShader extends ShaderProgram implements HasModelViewProjecti
 		loadUniform( gTexId, 3 );
 		loadUniform( bTexId, 4 );
 		
+	}
+
+	@Override
+	public void loadTerrainDimension( float terrainDimension ) {
+		loadUniform( terrainDimId, terrainDimension );
 	}
 }

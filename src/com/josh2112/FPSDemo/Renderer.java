@@ -1,25 +1,6 @@
 package com.josh2112.FPSDemo;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_FILL;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_LINE;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glFlush;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
@@ -37,6 +18,7 @@ import java.util.Map;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import com.josh2112.FPSDemo.entities.Entity;
 import com.josh2112.FPSDemo.modeling.Material;
@@ -47,7 +29,9 @@ import com.josh2112.FPSDemo.shaders.HasFog;
 import com.josh2112.FPSDemo.shaders.HasLightSource;
 import com.josh2112.FPSDemo.shaders.HasModelViewProjectionMatrices;
 import com.josh2112.FPSDemo.shaders.HasSpecular;
+import com.josh2112.FPSDemo.shaders.HasTextureBlend;
 import com.josh2112.FPSDemo.shaders.ShaderProgram;
+import com.josh2112.FPSDemo.shaders.TerrainShader;
 
 public class Renderer {
 
@@ -150,6 +134,18 @@ public class Renderer {
 		}
 		
 		prepareShader( null );
+		
+		if( scene.getHeadsUpDisplay() != null ) {
+			glLoadIdentity();
+			glOrtho( 0.0, Display.getWidth(), Display.getHeight(), 0.0, -1.0, 1.0 );
+			
+			glEnable( GL_BLEND );
+			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+			
+			scene.getHeadsUpDisplay().render();
+			
+			glDisable( GL_BLEND );
+		}
         
         glFlush();
 	}
@@ -173,6 +169,10 @@ public class Renderer {
 				((HasFog)activeShader).loadFogParams( scene.getFogDensity(), scene.getFogGradient() );
 				((HasFog)activeShader).loadSkyColor( scene.getSkyColor() );
 			}
+			
+			if( activeShader instanceof HasTextureBlend ) {
+				((TerrainShader)activeShader).loadTerrainDimension( scene.getTerrain().getTerrainDimension() );
+			}
 		}
 	}
 	
@@ -187,6 +187,7 @@ public class Renderer {
 			glBindTexture( GL_TEXTURE_2D, material.getTexture().getTextureID() );
 		}
 		else if( material instanceof TerrainMaterial ) {
+			((TerrainShader)activeShader).connectTextureUnits();
 			TextureBlend terrainMaterial = ((TerrainMaterial)material).getTextureBlend();
 			glActiveTexture( GL_TEXTURE0 );
 			glBindTexture( GL_TEXTURE_2D, terrainMaterial.getBlendTexture().getTextureID() );

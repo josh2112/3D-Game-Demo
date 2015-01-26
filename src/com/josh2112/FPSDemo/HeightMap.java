@@ -1,6 +1,7 @@
 package com.josh2112.FPSDemo;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -18,7 +19,7 @@ public class HeightMap {
 	public static HeightMap create( String heightMapName, float maxHeight, int sideLength, float textureSideLengthBlocks ) {
 		BufferedImage heightMap = null;
 		try {
-			heightMap = ImageIO.read( Assets.fileForTexture( heightMapName ) );
+			heightMap = ImageIO.read( new File( Resources.pathForResource( Resources.Type.Texture, heightMapName ) ) );
 		}
 		catch( IOException e ) {
 			System.err.println( "Failed to load image " + heightMapName ); 

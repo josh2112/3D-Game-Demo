@@ -1,20 +1,14 @@
 package com.josh2112.FPSDemo.entities;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
-
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import com.josh2112.FPSDemo.Assets;
 import com.josh2112.FPSDemo.HeightMap;
-import com.josh2112.FPSDemo.TextureBlend;
 import com.josh2112.FPSDemo.math.MathEx;
 import com.josh2112.FPSDemo.modeling.Material;
 import com.josh2112.FPSDemo.modeling.Model;
@@ -22,8 +16,6 @@ import com.josh2112.FPSDemo.modeling.ModelLoader;
 
 public class Terrain extends Entity {
 	
-	
-
 	private static Logger log = Logger.getLogger( Terrain.class.getName() );
 	
 	private float terrainDimension;
@@ -46,11 +38,11 @@ public class Terrain extends Entity {
 		for( int z=-size/2; z<=size/2; ++z ) {
 			for( int x=-size/2; x<=size/2; ++x ) {
 				float height = heightMap.getHeight( x, z );
+				Vector3f normal = getNormal( x, z, heightMap );
 				heights[x+size/2][z+size/2] = height; 
 				vertices[i*3+0] = x;
 				vertices[i*3+1] = height;
 				vertices[i*3+2] = z;
-				Vector3f normal = getNormal( x, z, heightMap );
 				normals[i*3+0] = normal.x;
 				normals[i*3+1] = normal.y;
 				normals[i*3+2] = normal.z;
@@ -93,6 +85,10 @@ public class Terrain extends Entity {
 		super( model );
 		this.terrainDimension = size;
 		this.heights = heights;
+	}
+	
+	public float getTerrainDimension() {
+		return terrainDimension;
 	}
 	
 	public List<Entity> populateWithPlant( Model plantModel, int num ) {
